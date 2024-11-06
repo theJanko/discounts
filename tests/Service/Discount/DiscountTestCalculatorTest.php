@@ -115,4 +115,26 @@ class DiscountTestCalculatorTest extends DiscountTest
 
         $this->assertEquals($totalPrice, $discountValue);
     }
+
+    public function testCalculatedDiscountTenProducts()
+    {
+        $products = [];
+        $discounts = [
+            new PercentageDiscount(10, 'TEST1'),
+            new FixedDiscount(10, 'TEST1'),
+            new VolumeDiscount(100, 3, 'TEST1'),
+        ];
+
+        for ($i = 0; $i < 10; ++$i) {
+            $products[] = $this->createProductMock('TEST1', 100, 'PLN', 1);
+        }
+
+        $totalPrice = 100 * 10;
+        $discountsValue = 0.1 * 100 * 10 + 10 * 10;
+
+        $discountCalculator = new DiscountCalculator($discounts);
+        $discountValue = $discountCalculator->calculateTotal($products);
+
+        $this->assertEquals($totalPrice - $discountsValue, $discountValue);
+    }
 }
