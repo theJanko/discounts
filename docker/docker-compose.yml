@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  nginx-discounts:
+    build: nginx
+    container_name: discounts-nginx
+    networks:
+      - discounts
+    ports:
+      - 8066:80
+    volumes:
+      - ..:/var/www/vhosts/discounts
+      - ./nginx/config.conf:/etc/nginx/conf.d/config.conf
+    depends_on:
+      - php-discounts
+
+  php-discounts:
+    container_name: discounts-php
+    networks:
+      - discounts
+    build:
+      context: ./php
+    volumes:
+      - ..:/var/www/vhosts/discounts
+    working_dir: /var/www/vhosts/discounts
+    restart: on-failure
+
+volumes:
+  db-data: ~
+
+networks:
+  discounts:
+    driver: bridge

@@ -11,7 +11,7 @@
 
 ### Installation
 ```bash
-git clone xxx
+git clone git@github.com:theJanko/discounts.git
 cd discounts
 composer install
 ```
