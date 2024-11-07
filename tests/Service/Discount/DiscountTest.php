@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class DiscountTest extends TestCase
 {
-    public function createProductMock(
+    protected function createProductMock(
         string $code,
         int $amount,
         string $currency,

@@ -14,6 +14,7 @@ final class PercentageDiscount extends Discount
     ) {
         parent::__construct($productCode);
     }
+
     public function apply(array $products): float
     {
         $discount = 0;

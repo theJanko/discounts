@@ -2,6 +2,8 @@
 
 namespace Service\Discount;
 
+use App\Exception\InvalidDiscountException;
+use App\Exception\InvalidProductException;
 use App\Service\Discount\DiscountCalculator;
 use App\Service\Discount\FixedDiscount;
 use App\Service\Discount\PercentageDiscount;
@@ -136,5 +138,41 @@ class DiscountTestCalculatorTest extends DiscountTest
         $discountValue = $discountCalculator->calculateTotal($products);
 
         $this->assertEquals($totalPrice - $discountsValue, $discountValue);
+    }
+
+    public function testCalculatedDiscountNonProductInterface()
+    {
+        $product = 'asd';
+        $product2 = $this->createProductMock('TEST1', 10000, 'PLN', 3);
+
+        $discounts = [
+            new PercentageDiscount(10, 'TEST1'),
+            new FixedDiscount(10, 'TEST1'),
+            new VolumeDiscount(100, 3, 'TEST1'),
+        ];
+
+        $discountCalculator = new DiscountCalculator($discounts);
+        $this->expectException(InvalidProductException::class);
+
+        $discountCalculator->calculateTotal([$product, $product2]);
+    }
+
+    public function testCalculatedDiscountNonDiscountInterface()
+    {
+        $product = $this->createProductMock('TEST1', 10000, 'PLN', 3);
+
+        $discount = 'asd';
+
+        $discounts = [
+            new PercentageDiscount(10, 'TEST1'),
+            new FixedDiscount(10, 'TEST1'),
+            new VolumeDiscount(100, 3, 'TEST1'),
+            $discount,
+        ];
+
+        $discountCalculator = new DiscountCalculator($discounts);
+        $this->expectException(InvalidDiscountException::class);
+
+        $discountCalculator->calculateTotal([$product]);
     }
 }
