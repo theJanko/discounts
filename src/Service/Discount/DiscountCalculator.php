@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Discount;
 
 use App\Contracts\ProductInterface;
+use App\Exception\InvalidDiscountException;
+use App\Exception\InvalidProductException;
 
 readonly class DiscountCalculator
 {
@@ -16,8 +18,11 @@ readonly class DiscountCalculator
     {
         $total = 0;
 
-        /** @var ProductInterface $product */
         foreach ($products as $product) {
+            if (!$product instanceof ProductInterface) {
+                throw new InvalidProductException();
+            }
+
             $total += $product->getPrice()->getAmount() * $product->getQuantity();
         }
 
@@ -25,6 +30,10 @@ readonly class DiscountCalculator
 
         /** @var Discount $discount */
         foreach ($this->discounts as $discount) {
+            if (!$discount instanceof Discount) {
+                throw new InvalidDiscountException();
+            }
+
             $discountAmount += $discount->apply($products);
         }
 
