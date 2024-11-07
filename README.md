@@ -8,23 +8,26 @@
 ### Requirements
 - PHP 8.3 or later
 - Composer
+- Docker
 
 ### Installation
 ```bash
 git clone git@github.com:theJanko/discounts.git
-cd discounts
-composer install
+cd discounts/docker
+docker-compose up -d
+docker exec -it discounts-php composer install
 ```
 
-### Instalation of php-cs-fixer
+### Instalation of php-cs-fixer for code style checking
 ```bash
-cd discounts/tools
+docker exec -it discounts-php bash
+cd tools/php-cs-fixer
 composer install
 ```
 
 ### Run the tests
 ```bash
-php bin/phpunit tests
+php vendor/bin/phpunit tests
 ```
 
 ### Usage
